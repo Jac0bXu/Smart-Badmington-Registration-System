@@ -6,7 +6,7 @@ class Court:
     def __init__(self, index, time, date):
         self.booked = False
         self.name = None
-        self.password = rm.randint(0, 99999)
+        self.password = rm.randint(10000, 99999)
         self.skill = None
         self.look = None
         self.index = index
@@ -99,7 +99,7 @@ def main():
         print('Blank schedule created')
         save_object(week, 'week.pkl')
 
-    option = input("What do you want to do?\n1. Register court\n2. Cancel registration\n3. Check availability\n4. Look for people to play\n5. Print all booked ")
+    option = input("What do you want to do?\n1. Register court\n2. Cancel registration\n3. Check availability\n4. Look for people to play\n5. Print all booked\n6. Quit\nEnter your choice: ")
 
     if option == '1':
         textDate = "What date would you like to register? Day (1-7) "
@@ -256,17 +256,26 @@ def main():
             print('Sorry we do not have people at your skill level that is looking for people to play with.')
 
     elif option == '5':
-        for date in week:
-            for hour in date:
-                for index in hour:
-                    if index.booked:
-                        print(index)
-                        print(index.password)
+        pwd = input("Enter administrative password: ")
+        if pwd == 'qwerty':
+            for date in week:
+                for hour in date:
+                    for index in hour:
+                        if index.booked:
+                            print(index)
+                            print(f'Password: {index.password}')
+        else:
+            print('Access denied')
 
+    elif option == '6':
+        print("Thank you for using Smart Badmington Registration System!")
+        return
     else:
         print('Wrong input. Please try again.')
 
     save_object(week, 'week.pkl')
+    print("---")
+    main()
 
 
 if __name__ == '__main__':
