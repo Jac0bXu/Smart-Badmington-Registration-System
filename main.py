@@ -14,7 +14,7 @@ class Court:
         self.date = date
 
     def __str__(self):
-        return f"Date: {self.date} Time: {self.time} Court: {self.index}\nBooked: {self.booked} Name: {self.name} Skill: {self.skill}\n"
+        return f"Date: {self.date} Hour: {self.time} Court: {self.index}\nBooked: {self.booked} Name: {self.name} Skill: {self.skill}\n"
 
 
 def save_object(obj, filename):
@@ -39,6 +39,46 @@ def get_available_hours(week, date):
     print("")
 
 
+def get_the_date(text):
+    while True:
+        date = int(input(text)) - 1
+        if date < 0 or date > 6:
+            print("Invalid date, try again")
+            continue
+        else:
+            return date
+
+
+def get_the_skill(text):
+    while True:
+        skill = input(text)
+        skill = skill.upper()
+        if skill != 'A' and skill != 'B' and skill != 'C' and skill != 'D':
+            print("Invalid skill, try again")
+            continue
+        else:
+            return skill
+
+
+def get_the_look(text):
+    while True:
+        look = input(text)
+        look = look.lower()
+        if look != 'y' and look != 'n':
+            print("Invalid input, try again")
+            continue
+        else:
+            break
+
+    if look.lower() == 'y':
+        look = True
+
+    elif look.lower() == 'n':
+        look = False
+
+    return look
+
+
 def main():
     try:
         with open('week.pkl', 'rb') as inp:
@@ -59,16 +99,11 @@ def main():
         print('Blank schedule created')
         save_object(week, 'week.pkl')
 
-    option = input("What do you want to do?\n1. Register court\n2. Cancel registration\n3. Check avaliablity\n4. Look for people to play ")
+    option = input("What do you want to do?\n1. Register court\n2. Cancel registration\n3. Check availability\n4. Look for people to play\n5. Print all booked ")
 
     if option == '1':
-        while True:
-            date = int(input("What date would you like to register? Day (1-7) ")) - 1
-            if date < 0 or date > 6:
-                print("Invalid date, try again")
-                continue
-            else:
-                break
+        textDate = "What date would you like to register? Day (1-7) "
+        date = get_the_date(textDate)
 
         get_available_hours(week, date)
 
@@ -82,30 +117,14 @@ def main():
                 continue
             else:
                 break
+
         name = input("What is your name? ")
-        while True:
-            skill = input("What is your skill level? (A/B/C/D) ")
-            skill = skill.upper()
-            if skill != 'A' and skill != 'B' and skill != 'C' and skill != 'D':
-                print("Invalid skill, try again")
-                continue
-            else:
-                break
 
-        while True:
-            look = input("Are you looking for others to play with you (y/n) ")
-            look = look.lower()
-            if look != 'y' and look != 'n':
-                print("Invalid input, try again")
-                continue
-            else:
-                break
+        textSkill = "What is your skill level? (A/B/C/D) "
+        skill = get_the_skill(textSkill)
 
-        if look.lower() == 'y':
-            look = True
-
-        elif look.lower() == 'n':
-            look = False
+        textLook = "Are you looking for others to play with you (y/n) "
+        look = get_the_look(textLook)
 
         index = 0
         for i in range(10):
@@ -122,13 +141,8 @@ def main():
               f'password for this reservation is {week[date][hour][index].password}')
 
     elif option == '2':
-        while True:
-            date = int(input("What is the date of your reservation? Day (1-7) ")) - 1
-            if date < 0 or date > 6:
-                print("Invalid date, try again")
-                continue
-            else:
-                break
+        textDate = "What is the date of your reservation? Day (1-7) "
+        date = get_the_date(textDate)
 
         while True:
             hour = int(input("What is the hour of your reservation? Hour (1-10) ")) - 1
@@ -140,7 +154,7 @@ def main():
 
         while True:
             index = int(input("What is the court number of your reservation? Court (1-10) ")) - 1
-            if index < 0 or index >9:
+            if index < 0 or index > 9:
                 print("Invalid index, try again")
                 continue
             else:
@@ -156,29 +170,11 @@ def main():
                 print("Please enter your information to cancel the reservation")
                 name = input("What is your name? ")
 
-                while True:
-                    skill = input("What is your skill level? (A/B/C/D) ")
-                    skill = skill.upper()
-                    if skill != 'A' and skill != 'B' and skill != 'C' and skill != 'D':
-                        print("Invalid skill, try again")
-                        continue
-                    else:
-                        break
+                textSkill = "What is your skill level? (A/B/C/D) "
+                skill = get_the_skill(textSkill)
 
-                while True:
-                    look = input("Are you looking for others to play with you (y/n) ")
-                    look = look.lower()
-                    if look != 'y' and look != 'n':
-                        print("Invalid input, try again")
-                        continue
-                    else:
-                        break
-
-                if look.lower() == 'y':
-                    look = True
-
-                elif look.lower() == 'n':
-                    look = False
+                textLook = "Are you looking for others to play with you (y/n) "
+                look = get_the_look(textLook)
 
                 if name == week[date][hour][index].name and week[date][hour][index].skill == skill and week[date][hour][index].look == look:
                     week[date][hour][index] = Court(index, hour, date)
@@ -190,7 +186,7 @@ def main():
             print("The court is not booked yet, please try again")
 
     elif option == '3':
-        daynum = 0
+        dayNum = 0
         for day in week:
             num = len(week[0]) * len(week[0][0])
             booked = 0
@@ -198,16 +194,11 @@ def main():
                 for court in hour:
                     if court.booked:
                         booked += 1
-            print(f'Day {daynum+1}, the courts are {booked/num*100}% booked')
-            daynum += 1
+            print(f'Day {dayNum+1}, the courts are {booked/num*100}% booked')
+            dayNum += 1
 
-        while True:
-            date = int(input("Which date do you want to check? Day (1-7) ")) - 1
-            if date < 0 or date > 6:
-                print("Invalid date, try again")
-                continue
-            else:
-                break
+        textDate = "Which date do you want to check? Day (1-7) "
+        date = get_the_date(textDate)
 
         get_available_hours(week, date)
 
@@ -224,13 +215,8 @@ def main():
                 print(week[date][hour][i])
 
     elif option == '4':
-        while True:
-            skill = input("What is your skill level? (A/B/C/D) ").upper()
-            if skill != 'A' and skill != 'B' and skill != 'C' and skill != 'D':
-                print("Invalid skill, try again")
-                continue
-            else:
-                break
+        textSkill = "What is your skill level? (A/B/C/D) "
+        skill = get_the_skill(textSkill)
 
         have = False
         print('Here are the people that are looking for people to play with:')
@@ -243,13 +229,8 @@ def main():
                             have = True
 
         if have:
-            while True:
-                date = int(input("What is the date of your desired reservation? ")) - 1
-                if date < 0 or date > 6:
-                    print("Invalid date, try again")
-                    continue
-                else:
-                    break
+            textDate = "What is the date of your desired reservation? "
+            date = get_the_date(textDate)
 
             while True:
                 hour = int(input("What is the hour of your desired reservation? ")) - 1
@@ -269,10 +250,19 @@ def main():
 
             name = input("What is your name? ")
             week[date][hour][index].name = week[date][hour][index].name + " and "+name
-            week[date][hour][index].skill = not week[date][hour][index].skill
+            week[date][hour][index].look = not week[date][hour][index].look
             print(week[date][hour][index])
         else:
             print('Sorry we do not have people at your skill level that is looking for people to play with.')
+
+    elif option == '5':
+        for date in week:
+            for hour in date:
+                for index in hour:
+                    if index.booked:
+                        print(index)
+                        print(index.password)
+
     else:
         print('Wrong input. Please try again.')
 
