@@ -6,7 +6,7 @@ class Court:
     def __init__(self, index, time, date):
         self.booked = False
         self.name = None
-        self.password = rm.randint(10000, 99999)
+        self.password = rm.randint(0, 99999)
         self.skill = None
         self.look = None
         self.index = index
@@ -149,7 +149,7 @@ def main():
         week[date][hour][index].look = look
 
         print(f'Registered {name} with skill level {skill}\non Day {date+1} and Hour {hour+5}:00 on Court {index+1}\nYour '
-              f'password for this reservation is {week[date][hour][index].password}')
+              f'password for this reservation is {week[date][hour][index].password:05}')
 
     elif option == '2':
         textDate = "What is the date of your reservation? Day (1-7) "
@@ -281,6 +281,7 @@ def main():
     elif option == '6':
         print("Thank you for using Smart Badmington Registration System!")
         return
+
     else:
         print('Wrong input. Please try again.')
 
