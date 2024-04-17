@@ -40,13 +40,12 @@ def get_available_hours(week, date):
 
 
 def get_the_date(text):
-    while True:
+    date = -1
+    while date < 0 or date > 6:
         date = int(input(text)) - 1
         if date < 0 or date > 6:
             print("Invalid date, try again")
-            continue
-        else:
-            return date
+    return date
 
 
 def get_the_skill(text):
@@ -79,11 +78,22 @@ def get_the_look(text):
     return look
 
 
+def menu():
+    print("Welcome to the Smart Badmington Registration System!")
+    print("What would you like to do?")
+    print('1. Register Court')
+    print('2. Cancel Registration')
+    print('3. Check Availability')
+    print('4. Look for people to play')
+    print('5. Print all bookings')
+    print('6. Exit')
+    print("Please enter your choice: ")
+
+
 def main():
     try:
         with open('week.pkl', 'rb') as inp:
             week = pickle.load(inp)
-            # print(week[0][0][0])
 
     except FileNotFoundError:
         week = []
@@ -99,7 +109,8 @@ def main():
         print('Blank schedule created')
         save_object(week, 'week.pkl')
 
-    option = input("What do you want to do?\n1. Register court\n2. Cancel registration\n3. Check availability\n4. Look for people to play\n5. Print all booked\n6. Quit\nEnter your choice: ")
+    menu()
+    option = input()
 
     if option == '1':
         textDate = "What date would you like to register? Day (1-7) "
