@@ -2,19 +2,21 @@ import random as rm
 import pickle
 
 
+# Court object used to store information of a registration
 class Court:
     def __init__(self, index, time, date):
         self.booked = False
         self.name = None
-        self.password = rm.randint(0, 99999)
-        self.skill = None
-        self.look = None
+        self.password = rm.randint(0, 99999)  # For canceling registration
+        self.skill = None  # Player's skill level
+        self.look = None  # Whether one is looking for others to play with
         self.index = index
         self.time = time
         self.date = date
 
+    # Format for print(Court a) command
     def __str__(self):
-        return f"Date: {self.date} Hour: {self.time} Court: {self.index}\nBooked: {self.booked} Name: {self.name} Skill: {self.skill}\n"
+        return f"Date: {self.date+1} Hour: {self.time+1} Court: {self.index+1}\nBooked: {self.booked} Name: {self.name} Skill: {self.skill}\n"
 
 
 def save_object(obj, filename):
@@ -77,7 +79,6 @@ def get_the_look(text):
 
 def get_the_hour(text,week,date,reg):
     hour = -1
-    rate = 1
     while hour < 0 or hour > 9 or (get_hour_booked_rate(week, date, hour) == 1 and reg):
         hour = int(input(text)) - 1
         if hour < 0 or hour > 9:
@@ -118,11 +119,11 @@ def main():
     except FileNotFoundError:
         week = []
 
-        for i in range(1, 8):
+        for i in range(0, 7):
             date = []
-            for j in range(1, 11):
+            for j in range(0, 10):
                 hour = []
-                for k in range(1, 11):
+                for k in range(0, 10):
                     hour.append(Court(k, j, i))
                 date.append(hour)
             week.append(date)
@@ -262,6 +263,7 @@ def main():
                         if index.booked:
                             print(index)
                             print(f'Password: {index.password:02}')
+                            print('---')
         else:
             print('Access denied')
 
