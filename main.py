@@ -49,33 +49,53 @@ def get_the_date(text):
 
 
 def get_the_skill(text):
-    while True:
+    skill = ''
+    while skill != 'A' and skill != 'B' and skill != 'C' and skill != 'D':
         skill = input(text)
         skill = skill.upper()
         if skill != 'A' and skill != 'B' and skill != 'C' and skill != 'D':
             print("Invalid skill, try again")
-            continue
-        else:
-            return skill
+    return skill
 
 
 def get_the_look(text):
-    while True:
+    look = ''
+    while look != 'y' and look != 'n':
         look = input(text)
         look = look.lower()
         if look != 'y' and look != 'n':
             print("Invalid input, try again")
-            continue
-        else:
-            break
 
     if look.lower() == 'y':
-        look = True
+        result = True
 
-    elif look.lower() == 'n':
-        look = False
+    else:
+        result = False
 
-    return look
+    return result
+
+
+def get_the_hour(text,week,date,reg):
+    hour = -1
+    rate = 1
+    while hour < 0 or hour > 9 or (get_hour_booked_rate(week, date, hour) == 1 and reg):
+        hour = int(input(text)) - 1
+        if hour < 0 or hour > 9:
+            print("Invalid hour, try again")
+
+        if get_hour_booked_rate(week, date, hour) == 1:
+            print('Sorry but we are all booked for this time, Please try another time.')
+
+    return hour
+
+
+def get_the_index(text):
+    index = -1
+    while index < 0 or index > 9:
+        index = int(input(text)) - 1
+        if index < 0 or index > 9:
+            print("Invalid index, try again")
+    return index
 
 
 def menu():
@@ -118,16 +138,8 @@ def main():
 
         get_available_hours(week, date)
 
-        while True:
-            hour = int(input("What hour would you like to register? Hour (1-10) ")) - 1
-            if hour < 0 or hour > 9:
-                print("Invalid hour, try again")
-                continue
-            if get_hour_booked_rate(week, date, hour) == 1:
-                print('Sorry but we are all booked for this time, Please try another time.')
-                continue
-            else:
-                break
+        textHour = "What hour would you like to register? Hour (1-10) "
+        hour = get_the_hour(textHour, week, date, True)
 
         name = input("What is your name? ")
 
@@ -155,21 +167,11 @@ def main():
         textDate = "What is the date of your reservation? Day (1-7) "
         date = get_the_date(textDate)
 
-        while True:
-            hour = int(input("What is the hour of your reservation? Hour (1-10) ")) - 1
-            if hour < 0 or hour > 9:
-                print("Invalid hour, try again")
-                continue
-            else:
-                break
+        textHour = "What is the hour of your reservation? Hour (1-10) "
+        hour = get_the_hour(textHour, week, date, False)
 
-        while True:
-            index = int(input("What is the court number of your reservation? Court (1-10) ")) - 1
-            if index < 0 or index > 9:
-                print("Invalid index, try again")
-                continue
-            else:
-                break
+        textIndex = "What is the court number of your reservation? Court (1-10) "
+        index = get_the_index(textIndex)
 
         if week[date][hour][index].booked:
             password = int(input("What is your password? "))
@@ -213,13 +215,8 @@ def main():
 
         get_available_hours(week, date)
 
-        while True:
-            hour = int(input("Which hour do you want to check? Hour (1-10) ")) - 1
-            if hour < 0 or hour > 9:
-                print("Invalid hour, try again")
-                continue
-            else:
-                break
+        textHour = "Which hour do you want to check? Hour (1-10) "
+        hour = get_the_hour(textHour, week, date, False)
 
         for i in range(len(week[0][0])):
             if week[date][hour][i].booked:
@@ -243,21 +240,11 @@ def main():
             textDate = "What is the date of your desired reservation? "
             date = get_the_date(textDate)
 
-            while True:
-                hour = int(input("What is the hour of your desired reservation? ")) - 1
-                if hour < 0 or hour > 9:
-                    print("Invalid hour, try again")
-                    continue
-                else:
-                    break
+            textHour = "What is the hour of your desired reservation? "
+            hour = get_the_hour(textHour, week, date, False)
 
-            while True:
-                index = int(input("What is the court number of your desired reservation? ")) - 1
-                if index < 0 or index > 9:
-                    print("Invalid index, try again")
-                    continue
-                else:
-                    break
+            textIndex = "What is the court number of your desired reservation? "
+            index = get_the_index(textIndex)
 
             name = input("What is your name? ")
             week[date][hour][index].name = week[date][hour][index].name + " and "+name
@@ -274,7 +261,7 @@ def main():
                     for index in hour:
                         if index.booked:
                             print(index)
-                            print(f'Password: {index.password}')
+                            print(f'Password: {index.password:02}')
         else:
             print('Access denied')
 
@@ -287,7 +274,6 @@ def main():
 
     save_object(week, 'week.pkl')
     print("---")
-    main()
 
 
 if __name__ == '__main__':
